@@ -4,36 +4,40 @@ import android.util.Range
 
 class Baraja {
 
-    companion object{
+    companion object {
+
 
         val listaCartas = ArrayList<Carta>()
 
-        fun crearBaraja(primerNumero:Int){
+        var cartaActual=Carta()
+
+        fun crearBaraja(primerNumero: Int) {
             listaCartas.clear()
             var contador = primerNumero
-            for ((indice,palo) in Palo.values().withIndex())
-                for (nombre in Nombre.values()) {
+            for (palo in Palo.values())
+                for ((indice, nombre) in Nombre.values().withIndex()) {
                     listaCartas.add(
                         Carta(
                             nombre,
                             palo,
-                            indice,
-                            if (nombre == Nombre.AS) 11 else indice,
+                            indice + 1,
+                            if (nombre == Nombre.AS) 11 else indice + 1,
                             contador
                         )
                     )
                     contador++
                 }
+            dameCarta()
         }
 
-        fun barajar(){
+        fun barajar() {
             listaCartas.shuffle()
         }
 
-        fun dameCarta():Carta
-        {
+        fun dameCarta(): Carta {
             val carta = listaCartas.last()
-            listaCartas.remove(carta)
+            listaCartas.removeLast()
+            cartaActual = carta
             return carta
         }
     }

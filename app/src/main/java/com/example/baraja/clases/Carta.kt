@@ -11,4 +11,6 @@ class Carta(nombreE:Nombre, paloE:Palo, puntosMinE:Int, puntosMaxE:Int, idDrawab
     val puntosMax =puntosMaxE 
 
     val idDrawable =idDrawableE
+
+    constructor():this(Nombre.NUEVE,Palo.PICAS, 1, 1, 1)
 }
