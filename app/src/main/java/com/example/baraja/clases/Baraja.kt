@@ -6,8 +6,7 @@ class Baraja {
 
     val listaCartas = ArrayList<Carta>()
 
-    fun crearBaraja(primerId:Int){
-        var contador = primerId
+    fun crearBaraja(){
         for ((indice,palo) in Palo.values().withIndex())
             for (nombre in Nombre.values()) {
                 listaCartas.add(
@@ -16,10 +15,9 @@ class Baraja {
                         palo,
                         indice,
                         if (nombre == Nombre.AS) 11 else indice,
-                        contador
+                        0
                     )
                 )
-                contador+=11
             }
     }
 
