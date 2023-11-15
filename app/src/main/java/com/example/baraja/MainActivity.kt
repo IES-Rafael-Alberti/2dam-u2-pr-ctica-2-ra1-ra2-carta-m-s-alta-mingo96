@@ -2,6 +2,7 @@ package com.example.baraja
 
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -54,15 +55,33 @@ fun pantallaBase(){
 
     val contexto = LocalContext.current
 
-
-    if(iniciado){
-        Baraja.crearBaraja(R.drawable.c01)
-        Baraja.barajar()
-        iniciado = false
+    var idCarta by rememberSaveable {
+        mutableStateOf(Baraja.cartaActual.idDrawable)
     }
 
     var dadaLaVuelta by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    if(iniciado){
+        Baraja.crearBaraja(contexto)
+        Baraja.barajar()
+        idCarta = Baraja.cartaActual.idDrawable
+        iniciado = false
+    }
+
+    val actualizarCarta = {
+        if(dadaLaVuelta){
+            if(!Baraja.dameCarta()) Toast.makeText(contexto, "No quedan mas cartas!!", Toast.LENGTH_SHORT).show()
+            idCarta = Baraja.cartaActual.idDrawable
+        }else
+            dadaLaVuelta= true
+    }
+
+    val reiniciar = {
+        Baraja.crearBaraja(contexto)
+        idCarta = Baraja.cartaActual.idDrawable
+        dadaLaVuelta = false
     }
 
     Column (
@@ -70,20 +89,16 @@ fun pantallaBase(){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Image(painter = painterResource(id = if (dadaLaVuelta) Baraja.cartaActual.idDrawable else R.drawable.c53), contentDescription = "carta",modifier=Modifier.fillMaxWidth())
+        Image(painter = painterResource(id = if (dadaLaVuelta) idCarta else R.drawable.c53), contentDescription = "carta",modifier=Modifier.fillMaxWidth())
 
         Row(Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly)
         {
-            Button(onClick = { dadaLaVuelta= true }) {
+            Button(onClick = actualizarCarta ) {
                 Text(text = "Dame carta")
             }
 
-            Button(onClick = {
-                Baraja.crearBaraja(R.drawable.c01)
-                Baraja.barajar()
-                dadaLaVuelta = false
-            }) {
+            Button(onClick = reiniciar ) {
                 Text(text = "reiniciar")
             }
         }

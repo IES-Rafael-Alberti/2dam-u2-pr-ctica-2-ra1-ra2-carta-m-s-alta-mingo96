@@ -1,5 +1,6 @@
 package com.example.baraja.clases
 
+import android.content.Context
 import android.util.Range
 
 class Baraja {
@@ -7,13 +8,12 @@ class Baraja {
     companion object {
 
 
-        val listaCartas = ArrayList<Carta>()
+        var listaCartas = ArrayList<Carta>()
 
         var cartaActual=Carta()
 
-        fun crearBaraja(primerNumero: Int) {
+        fun crearBaraja(contexto : Context) {
             listaCartas.clear()
-            var contador = primerNumero
             for (palo in Palo.values())
                 for ((indice, nombre) in Nombre.values().withIndex()) {
                     listaCartas.add(
@@ -22,11 +22,12 @@ class Baraja {
                             palo,
                             indice + 1,
                             if (nombre == Nombre.AS) 11 else indice + 1,
-                            contador
+                            0
                         )
                     )
-                    contador++
                 }
+            establecerId(contexto)
+            barajar()
             dameCarta()
         }
 
@@ -34,11 +35,20 @@ class Baraja {
             listaCartas.shuffle()
         }
 
-        fun dameCarta(): Carta {
+        fun dameCarta():Boolean {
+            if (listaCartas.isEmpty()) return false
             val carta = listaCartas.last()
             listaCartas.removeLast()
             cartaActual = carta
-            return carta
+            return true
+        }
+
+        fun establecerId(contexto: Context){
+
+            for((indice, carta) in listaCartas.withIndex()){
+                carta.idDrawable = contexto.resources.getIdentifier("c${indice+1}", "drawable", contexto.packageName)
+            }
+
         }
     }
 }
